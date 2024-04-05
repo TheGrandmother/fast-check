@@ -4,23 +4,27 @@ slug: /advanced/model-based-testing/
 
 # Model based testing
 
-Turn fast-check into a crazy QA
 
 ## Overview
 
-Model-based testing can also be referred to as[Monkey testing](https://en.wikipedia.org/wiki/Monkey_testing) to some extend. The basic concept is to put our system under stress by providing it with random inputs. With model-based testing, we compare our system to a highly simplified version of it: the model.
+The purpose of model checking is to gain confidence that your system will preserve invariants which are dependent on a state external to that of the system under test. A model is created that aims to emulate the behavior of the external state. The external state may for example be a user, a database, a train on a track or a system which is, by regards of certain properties, to be equivalent to the system under test.
 
-:::info The model, a optional helper
+A simple example would be to write a binary search tree the tree is always sorted, balanced and all values that have been added and not yet deleted can be retrieved from the tree regardless of the order or values of insertions and deletions.
+If we decide to create a concurrent implementation of such a tree, gaining confidence that these properties hold may be difficult using conventional unit testing.
+
+An example of a model to use for a concurrent binary search tree would be to use a simple sorted array as it should provide the same semantics as a fancy concurrent BST.
+
+:::info The model, an optional helper
 While the model part can assist you in writing your tests by storing intermediate states, past actions, or even mimicking the system, it is entirely optional. Model-based testing can be performed without it as well.
 :::
 
-In the context of fast-check, model-based testing involves defining a set of commands that can be seen as potential actions to be executed on your system. Each command consists of two elements: a check to verify if the action can be executed in the current context, and the action itself, which also performs assertions. Typically, we rely on the model to verify if the action is suitable and apply the action to both the system and the model.
+In the context of fast-check, model-based testing involves defining a set of commands that can be seen as potential actions to be executed on your system. Each command consists of two elements: a check to verify if the action can be executed in the current state, and the action itself, which also performs assertions. Typically, we rely on the model to verify if the action is suitable and apply the action to both the system and the model.
 
 :::warning The model, a simplified version of the system
-Although the model can be a useful tool, it's important to use it carefully. Model's goal is to simplify the system, but there is a risk that it may mimic the system too closely, leading to errors. The model should not be a carbon copy of the system but a simplified representation of it. It's crucial to avoid testing the code by comparing it to itself.
+Although the model can be a useful tool the aim of creating a model is to simplify the system under test or certain aspects of it. The code in conjunction with the model may not behave as it would in a real world scenario.
 :::
 
-## Write model-based tests
+## Writing model-based tests
 
 ### Define the commands
 
